@@ -12,8 +12,8 @@ from openai import OpenAI
 load_dotenv()
 
 # App Title
-st.title("Policies chatbot")
-st.subheader("Ask anything you want from your policies")
+st.title("Smart Policy Assistant")
+st.subheader("Ask Any Question About Your Policies")
 
 # Constants
 USER_AVATAR = "👤"
