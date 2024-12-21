@@ -13,7 +13,7 @@ load_dotenv()
 
 # App Title
 st.title("Mounaim's Resume Explorer")
-st.subheader("Interact with Mounaim's resume to learn more about his experience, skills, and achievements.")
+st.subheader("Ask anything you want from your policies")
 
 # Constants
 USER_AVATAR = "👤"
@@ -99,7 +99,7 @@ for message in st.session_state.messages:
         st.markdown(message["content"])
 
 # Main chat interface
-if prompt := st.chat_input("Curious about Mounaim's skills or background? Ask me anything!"):
+if prompt := st.chat_input("Chat with your policies !"):
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user", avatar=USER_AVATAR):
         st.markdown(prompt)
