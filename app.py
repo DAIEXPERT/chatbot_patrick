@@ -12,7 +12,7 @@ from openai import OpenAI
 load_dotenv()
 
 # App Title
-st.title("Mounaim's Resume Explorer")
+st.title("Policies chatbot")
 st.subheader("Ask anything you want from your policies")
 
 # Constants
