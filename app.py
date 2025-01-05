@@ -68,7 +68,7 @@ if "messages" not in st.session_state:
     st.session_state.messages = load_chat_history()
 
 # List of predefined PDF files
-pdf_files = ["docs/file1.pdf"]
+pdf_files = ["docs/file1.pdf","docs/file2.pdf","docs/file3.pdf"]
 
 # Load and process PDFs into a combined vectorstore on app startup
 if "vectorstore" not in st.session_state:
