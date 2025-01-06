@@ -7,9 +7,25 @@ from langchain.text_splitter import CharacterTextSplitter
 import streamlit as st
 from dotenv import load_dotenv
 from openai import OpenAI
+import boto3
 
 # Load environment variables
 load_dotenv()
+
+# AWS Configuration
+AWS_ACCESS_KEY_ID = "AKIARYEUCG3G665Z2K46"
+AWS_SECRET_ACCESS_KEY = "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"
+AWS_REGION = "eu-north-1"
+S3_BUCKET_NAME = "heroku-app"
+PDF_KEYS = ["file1.pdf", "file2.pdf", "file3.pdf"]
+
+# Initialize S3 client
+s3 = boto3.client(
+    "s3",
+    aws_access_key_id=AWS_ACCESS_KEY_ID,
+    aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+    region_name=AWS_REGION,
+)
 
 # App Title
 st.title("Smart Policy Assistant")
@@ -23,6 +39,19 @@ client = OpenAI(api_key=st.secrets['OPENAI_API_KEY'])
 # Ensure the OpenAI model is initialized in session state
 if "openai_model" not in st.session_state:
     st.session_state["openai_model"] = "gpt-3.5-turbo"
+
+# Function to download files from S3
+def download_files_from_s3(bucket_name, file_keys):
+    local_file_paths = []
+    for file_key in file_keys:
+        local_file_path = os.path.join("temp", file_key)
+        os.makedirs(os.path.dirname(local_file_path), exist_ok=True)
+        try:
+            s3.download_file(bucket_name, file_key, local_file_path)
+            local_file_paths.append(local_file_path)
+        except Exception as e:
+            st.error(f"Error downloading {file_key} from S3: {str(e)}")
+    return local_file_paths
 
 # Function to load and process multiple PDF files
 def load_multiple_pdfs(file_paths):
@@ -67,12 +96,10 @@ def save_chat_history(messages):
 if "messages" not in st.session_state:
     st.session_state.messages = load_chat_history()
 
-# List of predefined PDF files
-pdf_files = ["docs/file1.pdf","docs/file2.pdf","docs/file3.pdf"]
-
-# Load and process PDFs into a combined vectorstore on app startup
+# Download and load PDFs into a combined vectorstore on app startup
 if "vectorstore" not in st.session_state:
-    combined_text = load_multiple_pdfs(pdf_files)
+    downloaded_files = download_files_from_s3(S3_BUCKET_NAME, PDF_KEYS)
+    combined_text = load_multiple_pdfs(downloaded_files)
     if combined_text.strip():  # Ensure text is not empty
         text_chunks = get_text_chunks(combined_text)
         st.session_state.vectorstore = create_vectorstore(text_chunks)
