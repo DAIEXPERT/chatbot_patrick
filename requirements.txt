@@ -7,3 +7,4 @@ langchain-community
 faiss-cpu
 transformers
 sentence-transformers
+boto3
