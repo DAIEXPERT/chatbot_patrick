@@ -17,7 +17,7 @@ AWS_ACCESS_KEY_ID = "AKIARYEUCG3G665Z2K46"
 AWS_SECRET_ACCESS_KEY = "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"
 AWS_REGION = "eu-north-1"
 S3_BUCKET_NAME = "heroku-app"
-PDF_KEYS = ["file1.pdf", "file2.pdf"]
+PDF_KEYS = ["file1.pdf"]
 
 # Initialize S3 client
 s3 = boto3.client(
